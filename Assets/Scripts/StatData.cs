@@ -13,7 +13,7 @@ public class StatData : ScriptableObject
     private float baseStatValue = 0f;
 
 
-    // MAJOR ISSUE: THIS CURRENTLY AFFECTS THE ASSET NOT AN INSTANCE OF IT - MUST FIX
+    // MAJOR ISSUE: THIS CURRENTLY AFFECTS THE ASSET NOT AN INSTANCE OF IT - MUST FIX   
     [Tooltip("The current modifiers affecting the stat.")]
     [SerializeField]
     private StatModifier[] modifiers;
