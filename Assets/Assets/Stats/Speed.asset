@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Speed
   m_EditorClassIdentifier: Assembly-CSharp::StatData
   statName: Speed
-  baseStatValue: 10
+  baseStatValue: 2000
   modifiers: []
