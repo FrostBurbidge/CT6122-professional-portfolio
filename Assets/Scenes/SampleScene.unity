@@ -474,6 +474,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats: {fileID: 11400000, guid: e336612b96d0ef9489fd4d3475f6b299, type: 2}
+  initialAdd: {fileID: 11400000, guid: a9289b94e7c16614899dddc58977ab58, type: 2}
 --- !u!114 &1808053437
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -501,7 +502,7 @@ MonoBehaviour:
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
-  m_DefaultActionMap: 409ce952-9255-4e4a-816a-a386fd2fbd85
+  m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!1660057539 &9223372036854775807

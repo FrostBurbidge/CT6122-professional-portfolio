@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: DoubleStat
   m_EditorClassIdentifier: Assembly-CSharp::StatModifier
   type: 2
-  value: 2
+  value: 100
   permanent: 1
   duration: 0

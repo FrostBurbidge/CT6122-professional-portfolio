@@ -12,15 +12,18 @@ public class StatData : ScriptableObject
     [SerializeField]
     private float baseStatValue = 0f;
 
-
-    // MAJOR ISSUE: THIS CURRENTLY AFFECTS THE ASSET NOT AN INSTANCE OF IT - MUST FIX   
     [Tooltip("The current modifiers affecting the stat.")]
     [SerializeField]
-    private StatModifier[] modifiers;
+    private List<StatModifier> modifiers;
 
     public string GetName()
     {
         return statName;
+    }
+
+    public void AddModifier(StatModifier mod)
+    {
+        modifiers.Add(mod);
     }
 
     public float CalculateValue()
@@ -29,6 +32,7 @@ public class StatData : ScriptableObject
         List<float> adds = new List<float>();
 
         // Mults includes both multiplication and division
+        // Mults are in %
         List<float> mults = new List<float>();
 
         // Collecting and ordering the modifiers
@@ -49,8 +53,8 @@ public class StatData : ScriptableObject
                     mults.Add(mod.GetValue());
                     continue;
                 case StatModifier.ModifierTypes.Divide:
-                    // Getting the reciprocal so it divides
-                    mults.Add(1/mod.GetValue());
+                    // Negating the value so it subtracts from the mod amount
+                    mults.Add(-mod.GetValue());
                     continue;
             }
         }
@@ -64,10 +68,17 @@ public class StatData : ScriptableObject
             finalValue += add;
         }
 
+        // Base 1, with percentages added
+        float totalMult = 100;
         foreach (float mult in mults)
         {
-            finalValue *= mult;
+            totalMult += mult;
         }
+
+        // Converting out of percentage
+        totalMult /= 100;
+
+        finalValue *= totalMult;
 
         return finalValue;
     }

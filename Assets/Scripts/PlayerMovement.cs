@@ -15,11 +15,18 @@ public class PlayerMovement : MonoBehaviour
     // The current attack cooldown
     private float attackCooldown = 0;
 
+    // Temporary testing field remove later
+    [SerializeField]
+    private StatModifier initialAdd;
+
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log(stats.GetStatValue("Speed"));
+        stats = ScriptableObject.Instantiate(stats);
+        stats.Setup();
         rb = GetComponent<Rigidbody2D>();
+        ApplyModifier("Speed", initialAdd);
+        Debug.Log(stats.GetStatValue("Speed"));
     }
 
     void FixedUpdate()
@@ -31,7 +38,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void OnMove(InputValue value)
+    private void OnMove(InputValue value)
     {
         // Get input direction
         Vector2 dir = value.Get<Vector2>();
@@ -43,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
         rb.linearVelocity = dir * Time.deltaTime * stats.GetStatValue("Speed");
     }
 
-    public void OnFire(InputValue value)
+    private void OnFire(InputValue value)
     {
         if (attackCooldown <= 0)
         {
@@ -54,5 +61,23 @@ public class PlayerMovement : MonoBehaviour
             // Number of attacks per second
             attackCooldown = 1/stats.GetStatValue("AttackSpeed");
         }
+    }
+
+    private void ApplyModifier(string statName, StatModifier mod)
+    {
+        mod = ScriptableObject.Instantiate(mod);
+
+        stats.ApplyModifier(statName, mod);
+
+        if (!mod.IsPermanent())
+        {
+            StartCoroutine(StatDuration(mod));
+        }
+    }
+
+    private IEnumerator StatDuration(StatModifier mod)
+    {
+        yield return new WaitForSeconds(mod.GetDuration());
+        // REMOVE THE STAT 
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -10,7 +11,7 @@ public class StatModifier : ScriptableObject
     [SerializeField]
     private ModifierTypes type;
 
-    [Tooltip("The value of the modifier.")]
+    [Tooltip("The value of the modifier. Multiplication and division are in percentages.")]
     [SerializeField]
     [Range(0, 100)]
     private float value = 1;
@@ -32,5 +33,15 @@ public class StatModifier : ScriptableObject
     public float GetValue()
     {
         return value;
+    }
+
+    public float GetDuration()
+    {
+        return duration;
+    }
+
+    public bool IsPermanent()
+    {
+        return permanent;
     }
 }
