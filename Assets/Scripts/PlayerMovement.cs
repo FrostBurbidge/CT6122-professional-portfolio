@@ -86,7 +86,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void ApplyModifier(string statName, StatModifier mod)
+    public void ApplyModifier(string statName, StatModifier mod)
     {
         mod = ScriptableObject.Instantiate(mod);
 
