@@ -16,15 +16,26 @@ public class Bullet : MonoBehaviour
     private float damage = 0;
     // The bullet's owner
     private GameObject owner = null;
+    // The bullet's direction
+    private Vector2 direction;
 
-    public void Setup(GameObject owner, float damage) {
+    // The bullet's rigidbody
+    private Rigidbody2D rb;
+
+    public void Setup(GameObject owner, float damage, Vector2 direction) {
         this.owner = owner;
         this.damage = damage;
+        this.direction = direction;
         StartCoroutine(LifeTime());
+        rb = GetComponent<Rigidbody2D>();
     }
 
     private IEnumerator LifeTime() {
         yield return new WaitForSeconds(bulletLifeTime);
-        Destroy(this);
+        Destroy(gameObject);
+    }
+
+    private void FixedUpdate() {
+        rb.linearVelocity = direction * Time.fixedDeltaTime * bulletSpeed;
     }
 }

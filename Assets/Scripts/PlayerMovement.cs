@@ -69,10 +69,6 @@ public class PlayerMovement : MonoBehaviour
             attackCooldown = 1 / stats.GetStatValue("AttackSpeed");
 
             GameObject b = Instantiate(bulletPrefab);
-            if (b.GetComponent<Bullet>() != null) { 
-                Bullet bulletScript = b.GetComponent<Bullet>();
-                bulletScript.Setup(gameObject, stats.GetStatValue("Damage"));
-            }
             b.transform.position = transform.position;
 
             // Rotating to mouse
@@ -81,6 +77,12 @@ public class PlayerMovement : MonoBehaviour
             float rotZ = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
 
             b.transform.rotation = Quaternion.Euler(0f, 0f, rotZ);
+
+            if (b.GetComponent<Bullet>() != null) { 
+                Bullet bulletScript = b.GetComponent<Bullet>();
+                bulletScript.Setup(gameObject, stats.GetStatValue("Damage"), rotation);
+            }
+
         }
     }
 
