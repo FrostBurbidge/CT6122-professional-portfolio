@@ -38,6 +38,16 @@ public class PlayerStats : ScriptableObject
         }
     }
 
+    public void RemoveModifier(string statName, StatModifier mod)
+    {
+        StatData selectedStat = GetStat(statName);
+
+        if (selectedStat != null)
+        {
+            selectedStat.RemoveModifier(mod);
+        }
+    }
+
     private StatData GetStat(string statName)
     {
         StatData selectedStat = null;

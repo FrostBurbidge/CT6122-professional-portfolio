@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: AttackSpeed
   m_EditorClassIdentifier: Assembly-CSharp::StatData
   statName: AttackSpeed
-  baseStatValue: 1
+  baseStatValue: 1.2
   modifiers: []

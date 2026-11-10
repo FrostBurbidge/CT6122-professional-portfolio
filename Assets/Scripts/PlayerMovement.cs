@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,15 +10,17 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private PlayerStats stats;
 
+    [Tooltip("The bullet prefab.")]
+    [SerializeField]
+    private GameObject bulletPrefab;
+
     // The rigidbody
     private Rigidbody2D rb;
 
     // The current attack cooldown
     private float attackCooldown = 0;
-
-    // Temporary testing field remove later
-    [SerializeField]
-    private StatModifier initialAdd;
+    // If attack is held
+    private bool attacking = false;
 
     // Start is called before the first frame update
     void Start()
@@ -25,7 +28,6 @@ public class PlayerMovement : MonoBehaviour
         stats = ScriptableObject.Instantiate(stats);
         stats.Setup();
         rb = GetComponent<Rigidbody2D>();
-        ApplyModifier("Speed", initialAdd);
         Debug.Log(stats.GetStatValue("Speed"));
     }
 
@@ -35,31 +37,50 @@ public class PlayerMovement : MonoBehaviour
         if (attackCooldown > 0)
         {
             attackCooldown -= Time.deltaTime;
+        } if (attacking && attackCooldown <= 0) {
+            FireBullet();
         }
     }
 
     private void OnMove(InputValue value)
     {
         // Get input direction
-        Vector2 dir = value.Get<Vector2>();
+        Vector2 dir = value.Get<Vector2>().normalized;
 
         //Debug.Log(dir);
 
-        //Debug.Log(dir * Time.deltaTime * stats.GetStatValue("Speed"));
+        //Debug.Log(Time.fixedDeltaTime * stats.GetStatValue("Speed"));
 
-        rb.linearVelocity = dir * Time.deltaTime * stats.GetStatValue("Speed");
+        rb.linearVelocity = dir * Time.fixedDeltaTime * stats.GetStatValue("Speed");
     }
 
-    private void OnFire(InputValue value)
-    {
-        if (attackCooldown <= 0)
-        {
+    // Set up autofire
+    private void OnFire(InputValue value) {
+        attacking = value.Get<float>() == 1;
+    }
+
+    private void FireBullet() {
+        if (attackCooldown <= 0) {
             // Debug player damage print
             Debug.Log(stats.GetStatValue("Damage"));
 
             // 1 over to make the number more intuitive, as then the attack speed is
             // Number of attacks per second
-            attackCooldown = 1/stats.GetStatValue("AttackSpeed");
+            attackCooldown = 1 / stats.GetStatValue("AttackSpeed");
+
+            GameObject b = Instantiate(bulletPrefab);
+            if (b.GetComponent<Bullet>() != null) { 
+                Bullet bulletScript = b.GetComponent<Bullet>();
+                bulletScript.Setup(gameObject, stats.GetStatValue("Damage"));
+            }
+            b.transform.position = transform.position;
+
+            // Rotating to mouse
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 rotation = mousePos - transform.position;
+            float rotZ = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
+
+            b.transform.rotation = Quaternion.Euler(0f, 0f, rotZ);
         }
     }
 
@@ -71,13 +92,15 @@ public class PlayerMovement : MonoBehaviour
 
         if (!mod.IsPermanent())
         {
-            StartCoroutine(StatDuration(mod));
+            StartCoroutine(StatDuration(statName, mod));
         }
     }
 
-    private IEnumerator StatDuration(StatModifier mod)
+    // Stats are scriptableobjects and can't run coroutines
+    private IEnumerator StatDuration(string statName, StatModifier mod)
     {
         yield return new WaitForSeconds(mod.GetDuration());
-        // REMOVE THE STAT 
+        stats.RemoveModifier(statName, mod);
+        print(stats.GetStatValue("Speed"));
     }
 }

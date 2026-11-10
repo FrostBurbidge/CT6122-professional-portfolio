@@ -26,6 +26,11 @@ public class StatData : ScriptableObject
         modifiers.Add(mod);
     }
 
+    public void RemoveModifier(StatModifier mod)
+    {
+        modifiers.Remove(mod);
+    }
+
     public float CalculateValue()
     {
         // Adds includes both addition and subtractions
