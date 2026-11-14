@@ -14,8 +14,16 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private GameObject bulletPrefab;
 
+    [Tooltip("The stats UI display.")]
+    [SerializeField]
+    private StatsUI statsUI;
+
     // The rigidbody
     private Rigidbody2D rb;
+
+    // The health component
+    private HealthComponent health;
+
 
     // The current attack cooldown
     private float attackCooldown = 0;
@@ -28,6 +36,11 @@ public class PlayerMovement : MonoBehaviour
         stats = ScriptableObject.Instantiate(stats);
         stats.Setup();
         rb = GetComponent<Rigidbody2D>();
+        health = GetComponent<HealthComponent>();
+        if (GetComponent<HealthComponent>())
+        {
+            health.Setup(stats);
+        }
         Debug.Log(stats.GetStatValue("Speed"));
     }
 
@@ -39,6 +52,12 @@ public class PlayerMovement : MonoBehaviour
             attackCooldown -= Time.deltaTime;
         } if (attacking && attackCooldown <= 0) {
             FireBullet();
+        }
+
+        // Update stats UI
+        if (statsUI)
+        {
+            statsUI.DisplayStats(stats);
         }
     }
 

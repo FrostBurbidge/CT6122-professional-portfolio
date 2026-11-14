@@ -48,6 +48,7 @@ public class PlayerStats : ScriptableObject
         }
     }
 
+    // To get the statdata, used in other public functions
     private StatData GetStat(string statName)
     {
         StatData selectedStat = null;
@@ -62,5 +63,18 @@ public class PlayerStats : ScriptableObject
         }
 
         return selectedStat;
+    }
+
+    // Get the names of all the stats
+    public string[] GetStatNames()
+    {
+        string[] names = new string[stats.Length];
+
+        for (int i = 0; i < names.Length; i++)
+        {
+            names[i] = stats[i].GetName();
+        }
+
+        return names;
     }
 }
