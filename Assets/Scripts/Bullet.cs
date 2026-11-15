@@ -47,6 +47,10 @@ public class Bullet : MonoBehaviour
         // So it doesn't collider with the player
         if (collision.gameObject != owner)
         {
+            if (collision.gameObject.GetComponent<HealthComponent>())
+            {
+                collision.gameObject.GetComponent<HealthComponent>().TakeDamage(damage);
+            }
             Destroy(gameObject);
         }
     }

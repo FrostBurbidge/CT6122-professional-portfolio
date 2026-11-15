@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Damage
   m_EditorClassIdentifier: Assembly-CSharp::StatData
   statName: Damage
-  baseStatValue: 1
+  baseStatValue: 3
   modifiers: []
